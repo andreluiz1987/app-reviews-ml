@@ -9,25 +9,22 @@ function App() {
   const [movie, setMovies] = useState();
   const [review, setReview] = useState();
 
-  const handleSubmit = event => {
-    event.preventDefault();
-
+  const handleSubmit = () => {
     save("/doc", {
-      name: event.target.name.value,
-      movie: event.target.movie.value,
-      reviewText: event.target.review.value
+      name: name,
+      movie: movie,
+      reviewText: review
     })
-      .then(response => response);
-
-    setTimeout(() => {
-      getAll("/all")
-        .then(response => {
-          setreviews(response.data)
-          setName('');
-          setMovies('');
-          setReview('');
-        });
-    }, 1500);
+      .then(response => {
+        getAll("/all")
+          .then(response => {
+            setreviews(response.data)
+            setName('');
+            setMovies('');
+            setReview('');
+          });
+      }
+      );
   }
 
   const ReviewGridWrapper = ({ reviews }) => {
@@ -76,27 +73,27 @@ function App() {
       </div>
     )
   }
+
   return (
     <div className="wrapper">
       <h1>IMDB Review Classification</h1>
-      <form onSubmit={handleSubmit}>
-        <fieldset>
-          <label>
-            <p style={{ fontWeight: 'bold' }}>Name:</p>
-            <input name="name" value={name} />
-          </label>
-          <label>
-            <p style={{ fontWeight: 'bold' }}>Movie:</p>
-            <input name="movie" value={movie} />
-          </label>
-          <label>
-            <p style={{ fontWeight: 'bold' }}>Review: </p>
-            <textarea  value={review} style={{ width: "500px", height: "75px" }} type="textarea" name="review" />
-          </label>
-          <div style={{ marginTop: "10px" }}>
-            <button type="submit">Submit</button></div>
-        </fieldset>
-      </form>
+      <fieldset>
+        <label>
+          <p style={{ fontWeight: 'bold' }}>Name:</p>
+          <input id="name" onChange={event => setName(event.target.value)} name="name" value={name} />
+        </label>
+        <label>
+          <p style={{ fontWeight: 'bold' }}>Movie:</p>
+          <input name="movie" onChange={event => setMovies(event.target.value)} value={movie} />
+        </label>
+        <label>
+          <p style={{ fontWeight: 'bold' }}>Review: </p>
+          <textarea value={review} onChange={event => setReview(event.target.value)} style={{ width: "500px", height: "75px" }} type="textarea" name="review" />
+        </label>
+        <div style={{ marginTop: "10px" }}>
+          <button onClick={handleSubmit}>Submit</button>
+        </div>
+      </fieldset>
       <div style={{ margin: "10px" }}>
         <h2 >Users Reviews</h2>
         <div>
